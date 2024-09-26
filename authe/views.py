@@ -40,15 +40,51 @@ class LoginPage(View):
                 message='user non found'
             
 
-        message = 'Identifiants invalides.'
+        message = 'Identifiants invalides.'  
         context = {
-            'form': form,
-            'message': message
+        'form': form,
+        'message': message
         }
         return render(                 
             request,
             self.template_name,
             context
-        )    
-class SignupPage(View):      
+        )  
+          
+class SignupPage(View):     
+    form_class=forms.SignupForm             #Signup=attribut de "forms"
+    template_name='authentification/inscription.html'
+    
+    def get(self, request):        
+        form=self.form_class          
+        
+        context={'form':form,
+                   
+        }
+        return render(                 
+            request,
+            self.template_name,
+            context
+        )     
+        
+    def post(self, request):  
+        form = self.form_class(request.POST)  
+        if form.is_valid(): 
+            user = form.save()
+            login(request, user)
+            return redirect('accueil') # lien vers la vue de la page d'accueil
+        context={'form':form,}
+        return render(
+            request, self.template_name, context
+        )
+    
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+            
+            
+
+            
+    
+            
         

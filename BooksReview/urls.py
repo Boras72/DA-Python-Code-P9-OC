@@ -18,12 +18,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from authe.views import LoginPage
+from authe.views import LoginPage, SignupPage, logout_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LoginPage.as_view(), name='login'),
-    path('signup/', LoginPage.as_view(), name='signup'),
-    #path('logout/', logout_user, name='logout'),
+    path('signup/', SignupPage.as_view(), name='signup'),
+    path('logout/', logout_user, name='logout'),
     #path('feed/', feed.as_view(), name='feed'),
+    
 ]
