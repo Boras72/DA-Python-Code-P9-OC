@@ -13,7 +13,7 @@ class User(AbstractUser):
         verbose_name='suivi par',
         related_name='followers'
     )
-    groups = models.ManyToManyField(
+    groups = models.ManyToManyField(  
         'auth.Group',
         related_name='custom_user_groups',  # Add a custom related_name
         blank=True,
