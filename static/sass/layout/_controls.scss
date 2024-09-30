@@ -1,0 +1,11 @@
+.controls {
+    @include font_style;
+    display: flex;
+    flex-direction: column;
+}
+
+.controls-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

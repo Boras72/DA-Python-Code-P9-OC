@@ -1,0 +1,226 @@
+html {
+  background-image: url("../img/paper2.jpg");
+  background-size: 40%;
+  background-repeat: repeat;
+}
+
+.container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.profile-pic-small {
+  max-width: 50px;
+  clip-path: circle();
+  display: block;
+  margin: auto;
+}
+
+@font-face {
+  font-family: "typewriter_condensedregular";
+  src: url("typewcond_regular-webfont.woff2") format("woff2"), url("typewcond_regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+h1, h2, h3 {
+  font-family: "typewriter_condensedregular";
+  color: #000;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+a {
+  font-family: "typewriter_condensedregular";
+  color: #000;
+  color: #000;
+  text-decoration: none;
+  transition: color 0.5s;
+}
+a:hover {
+  color: #c49b38;
+}
+
+p, span, ul {
+  font-family: "typewriter_condensedregular";
+  color: #000;
+}
+
+.form {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 5px 30px 10px 30px;
+  border-radius: 3px;
+  border: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.form textarea {
+  font-family: "typewriter_condensedregular";
+  color: #000;
+}
+.form input, .form label {
+  display: block;
+  font-family: "typewriter_condensedregular";
+  color: #000;
+}
+.form input {
+  width: 100%;
+  height: 35px;
+}
+.form label {
+  font-weight: bold;
+}
+.form .helptext, .form ul {
+  color: #c49b38;
+  font-size: small;
+}
+
+.form__search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.form__search input {
+  display: block;
+  width: 100%;
+  height: 35px;
+}
+
+.btn {
+  display: block;
+  font-family: "typewriter_condensedregular";
+  color: #000;
+  font-size: medium;
+  font-weight: bold;
+  height: 45px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: solid 1px #000;
+  border-radius: 2px;
+  transition: all 0.3s;
+  margin: 2px 2px 2px 2px;
+}
+.btn:hover {
+  cursor: pointer;
+  color: #c49b38;
+}
+
+.logo {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header .header__right {
+  width: 25%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+header .header__center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+header .header__left {
+  width: 25%;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.col-25 {
+  width: 25%;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 60%;
+}
+
+.container__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.container__feed {
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 5px 30px 10px 30px;
+  border-radius: 3px;
+  border: 1px solid #000;
+}
+.container__feed h2, .container__feed h3 {
+  text-align: center;
+}
+.container__feed .photo {
+  max-width: 130px;
+  border: solid 2px #c49b38;
+}
+.container__feed .description {
+  padding-left: 10px;
+}
+.container__feed .photo-description, .container__feed .user-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container__feed .fa-star {
+  color: #c49b38;
+}
+
+.user-infos {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls {
+  font-family: "typewriter_condensedregular";
+  color: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.profile-pic {
+  max-width: 180px;
+  clip-path: circle();
+  display: block;
+  margin: auto;
+}
+
+.user-follower {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.user-follower__user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/*# sourceMappingURL=style.css.map */

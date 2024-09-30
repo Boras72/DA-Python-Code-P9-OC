@@ -1,0 +1,31 @@
+@font-face {
+    font-family: 'typewriter_condensedregular';
+    src: url('typewcond_regular-webfont.woff2') format('woff2'),
+         url('typewcond_regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+h1, h2, h3 {
+    @include font_style;
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+a {
+    @include font_style;
+    color: $font-color;
+    text-decoration: none;
+    transition: color 0.5s;
+    &:hover {
+        color: $primary-color;
+    }
+}
+
+p, span, ul {
+    @include font_style;
+}

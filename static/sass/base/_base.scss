@@ -1,0 +1,13 @@
+html {
+    background-image: url('../img/paper2.jpg');
+    background-size: 40%;
+    background-repeat: repeat;
+}
+
+.container {
+    display: flex;
+    justify-content: space-evenly;
+}
+.profile-pic-small {
+    @include profile-pic-small;
+}

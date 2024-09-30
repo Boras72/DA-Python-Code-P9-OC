@@ -1,0 +1,19 @@
+.profile-pic {
+    max-width: 180px;
+    clip-path: circle();
+    display: block;
+    margin: auto;
+}
+
+.user-follower {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.user-follower__user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}

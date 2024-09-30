@@ -1,19 +1,31 @@
+{% load static %}
 <html>
 <head>
-    <title>Connexion</title>
- 
+    <title>LitReviews</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://kit.fontawesome.com/8e873955b8.js" crossorigin="anonymous"></script>
+    <script src="{% static 'js/index.js' %}"></script>
 </head>
 <body>
-    <h1>Connexion</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Se connecter</button>
-    </form>
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
+    <header>
+       
+        <a href="{% url 'login' %}">      
+            <div class="header__center">
+                <img class="logo" src="{% static 'img/logo_black.png' %}">
+                <h1>LITReviews</h1>
+            </div>
+        </a>
+        <div class="header__left">
+            {% if user.is_authenticated %}
+                <p><a href="{% url 'logout' %}">Me déconnecter</a></p>
+            {#   <p><a href="{% url 'user_profile' request.user %}">Mon Profil</a></p> #}
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container">
+        {% block content %}{% endblock content %}
+    </div>
 </body>
 </html>
-<!-- templates/authentication/login.html -->
 

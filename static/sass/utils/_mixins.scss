@@ -1,0 +1,24 @@
+@mixin font_style {
+    font-family: "typewriter_condensedregular";
+    color: $font-color;
+}
+
+@mixin center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@mixin base_style_div {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 5px 30px 10px 30px;
+    border-radius: 3px;
+    border: 1px solid $font-color;
+}
+
+@mixin profile-pic-small {
+    max-width: 50px;
+    clip-path: circle();
+    display: block;
+    margin: auto;
+}
