@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'authe'
+    'func'
     
 ]
 
@@ -133,3 +134,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR.joinpath('static/')]
+
+# pour faire référence à l'user créé dans la classe 'user' du modèle 'authe'
+AUTH_USER_MODEL = 'authe.User'

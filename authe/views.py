@@ -3,12 +3,13 @@ from . import forms
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
+#from .forms import CustomUserCreationForm
 
 
-class LoginPage(View):
+class LoginPage(View):      #"view" =class prédéfinie dans django
     form_class=forms.LoginForm
     template_name='authentification/connexion.html'
-    # méthode qui envoie un formulaire vierge, il attend q l'user clique sur connexion (input)
+    # méthode qui envoie un formulaire vierge (page web), il attend q l'user clique sur connexion (input)
     def get(self, request):        #self=classe (attributs de la classe: view, from_class, temlate_class)
         form=self.form_class          #instance=objet (self représente l'instance actuelle de cette classe)
         message=''
