@@ -11,9 +11,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+# Définition de BASE_DIR :
 BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,11 +41,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authe'
-    'func'
+    'authe',
+    'func',
+    #'BooksReview',
     
 ]
 
+    
+    
+    
+    
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -54,11 +63,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'BooksReview.urls'
 
+
+# Configuration des templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        #'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'DIRS': [
-            BASE_DIR.joinpath('templates'),
+            BASE_DIR / 'templates',
+            BASE_DIR / 'func' / 'Templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -66,24 +79,29 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages'
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
 
+
+
 WSGI_APPLICATION = 'BooksReview.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+# Configuration de la base de données
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
 
 
 # Password validation
@@ -117,10 +135,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -131,9 +146,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR.joinpath('static/')]
 
-# pour faire référence à l'user créé dans la classe 'user' du modèle 'authe'
+# Configuration des fichiers statiques
+#STATIC_ROOT = BASE_DIR / 'static'
+#STATIC_ROOT = os.path.join(str(BASE_DIR), 'static')
+
+
+
+
+# pour faire référence à l'user créé dans la classe 'User' du modèle 'authe'
 AUTH_USER_MODEL = 'authe.User'
+
+
+LOGIN_URL = '/login/'  #  cela correspond à l'URL de la page de connexion

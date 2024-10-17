@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Supprimer le ticket{% endblock %}
+
+{% block content %}
+<p>Êtes-vous sûr de vouloir supprimer ce ticket : "{{ ticket.title }}" ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Oui, supprimer</button>
+</form>
+<a href="{% url 'feed' %}">Annuler</a>
+{% endblock %}
+

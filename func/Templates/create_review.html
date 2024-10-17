@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Créer une critique{% endblock %}
+
+{% block content %}
+<h3>Ticket : {{ ticket.title }}</h3>  <!-- on peut mettre une balise <p> à la place de la balise "h3" -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Soumettre la critique</button>
+</form>
+
+{% endblock %}

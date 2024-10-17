@@ -1,14 +1,16 @@
 {% load static %}
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-    <title>LitReviews</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LitReviews{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="https://kit.fontawesome.com/8e873955b8.js" crossorigin="anonymous"></script>
     <script src="{% static 'js/index.js' %}"></script>
 </head>
 <body>
     <header>
-       
         <a href="{% url 'login' %}">      
             <div class="header__center">
                 <img class="logo" src="{% static 'img/logo_black.png' %}">
@@ -18,14 +20,24 @@
         <div class="header__left">
             {% if user.is_authenticated %}
                 <p><a href="{% url 'logout' %}">Me déconnecter</a></p>
-            {#   <p><a href="{% url 'user_profile' request.user %}">Mon Profil</a></p> #}
+                {# <p><a href="{% url 'user_profile' request.user %}">Mon Profil</a></p> #}
             {% endif %}
         </div>
+
+
     </header>
 
-    <div class="container">
-        {% block content %}{% endblock content %}
-    </div>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <!-- un pied de page si nécessaire -->
+    </footer>
+
 </body>
 </html>
+
+
+
 

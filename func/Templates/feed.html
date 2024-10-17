@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Flux d'activités{% endblock %}
+
+{% block content %}
+<h2>Flux d'activités</h2>
+{% if posts %}
+    {% for post in posts %}
+        {% if post.content_type == 'TICKET' %}  
+            <div class="ticket">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.description }}</p>
+                <p>Par {{ post.user.username }} le {{ post.time_created }}</p>
+                <a href="{% url 'create_review' post.id %}">Créer une critique</a>
+            </div>
+        {% elif post.content_type == 'REVIEW' %}
+            <div class="review">
+                <h3>{{ post.headline }} - {{ post.rating }}/5</h3>
+                <p>{{ post.body }}</p>
+                <p>Par {{ post.user.username }} le {{ post.time_created }}</p>
+                <h4>En réponse au ticket : {{ post.ticket.title }}</h4>
+            </div>
+        <!--{% else %}
+            {{post}}-->
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>Aucun post à afficher.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Supprimer la critique{% endblock %}
+
+{% block content %}
+<p>Êtes-vous sûr de vouloir supprimer cette critique ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Oui, supprimer</button>
+</form>
+<a href="{% url 'feed' %}">Annuler</a>
+
+{% endblock %}
+
+
+

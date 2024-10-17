@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Gérer les abonnements{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Suivre</button>
+</form>
+
+<h3>Utilisateurs suivis</h3>
+<ul>
+    {% for follow in user.following.all %}
+        <li>
+            {{ follow.followed_user.username }}
+            <a href="{% url 'unfollow_user' follow.followed_user.id %}">Ne plus suivre</a>
+        </li>
+    {% empty %}
+        <li>Vous ne suivez aucun utilisateur.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+
+

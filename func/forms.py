@@ -1,8 +1,7 @@
 from django import forms
-from . import models # => from .models import Ticket, Review, UserFollows + from .models import User
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-
-
+from .models import Ticket, Review, UserFollows
 
 class TicketForm(forms.ModelForm):
     class Meta:
@@ -20,6 +19,7 @@ class UserFollowsForm(forms.ModelForm):
         fields = ['followed_user']
         
 class CustomUserCreationForm(UserCreationForm):
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'password1', 'password2')
+        
