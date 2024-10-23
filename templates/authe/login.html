@@ -1,15 +1,16 @@
-{% extends 'base.html' %} <!--  = Vue -->
-{% block content %}  <!-- = contenu  -->
+{% extends 'base.html' %} 
+
+{% block title %}Connexion - LitReview{% endblock %}
+
+{% block content %}  
     <div class="form form__login">
         <h2>Connexion</h2>
         <form method="post">
-            {{ form.as_p }}   <!--  les 2 éléments de message de la méthode post dans la view sont ici-->
             {% csrf_token %}
+            {{ form.as_p }}   
             <input class="btn" type="submit" value="Se connecter">
             <p>{{ message }}</p>
             <p>Pas encore de compte ? <a href="{% url 'signup' %}">S'inscrire</a></p>
         </form>
     </div>
-{% endblock content %} <!-- {} = variables non présentes dans le html vanilla en code python-->
-
-<!--   -->
+{% endblock content %}

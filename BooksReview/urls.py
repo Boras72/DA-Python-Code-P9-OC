@@ -22,34 +22,25 @@ Including another URLconf
 # Attention: 'login' est utilisé ici au lieu de 'connexion'. Utiliser toujours les mêmes noms dans les vues et les templates. 
 # Il est conseillé de regrouper les URLs par application, utiliser plutot 'include()' pour séparer les URLs de 'authe' et 'func' dans leurs propres fichiers urls.py.
 
+
+
 from django.contrib import admin
-#from django.contrib import auth
 from django.urls import path, include
-from authe.views import LoginPage, SignupPage, logout_user
-from func.views import (ticket_create, ticket_edit, ticket_delete, feed, create_review, create_ticket_review, edit_review, delete_review)
-from .views import accueil_view
+from django.shortcuts import redirect 
+from django.conf import settings
+from django.conf.urls.static import static
 
-
-
-
-
+def root_redirect(request):
+    if request.user.is_authenticated:
+        return redirect('feed')
+    else:
+        return redirect('login')
 
 urlpatterns = [
+    path('', root_redirect, name='root'),
     path('admin/', admin.site.urls),
-    path('login/', LoginPage.as_view(), name='login'),
-    path('signup/', SignupPage.as_view(), name='signup'),  
-    path('logout/', logout_user, name='logout'),
-    path('feed/', feed, name='feed'),
-    path('ticket/create/', ticket_create, name='ticket_create'),
-    path('ticket/edit/<int:ticket_id>/', ticket_edit, name='ticket_edit'),
-    path('ticket/delete/<int:ticket_id>/', ticket_delete, name='ticket_delete'),
-    path('review/create/<int:ticket_id>/', create_review, name='create_review'),
-    path('ticket-review/create/', create_ticket_review, name='create_ticket_review'),
-    path('review/edit/<int:review_id>/', edit_review, name='edit_review'),
-    path('review/delete/<int:review_id>/', delete_review, name='delete_review'),
-    path('', accueil_view, name='accueil'),
-
+    path('auth/', include('authe.urls')),  # Changé de '' à 'auth/'
+    path('', include('func.urls')),
+    
 ]
-
-
-
+#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

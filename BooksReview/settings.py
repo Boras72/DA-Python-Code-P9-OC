@@ -43,13 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authe',
     'func',
-    #'BooksReview',
+    
     
 ]
 
-    
-    
-    
     
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,10 +65,10 @@ ROOT_URLCONF = 'BooksReview.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        #'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'DIRS': [
-            BASE_DIR / 'templates',
+            BASE_DIR / 'templates',  # chemins des templates
             BASE_DIR / 'func' / 'Templates',
+            BASE_DIR / 'authe' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -127,39 +124,37 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
-
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+#DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR.joinpath('static/')]
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Configuration des fichiers statiques
-#STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Ceci est différent de STATICFILES_DIRS
 #STATIC_ROOT = os.path.join(str(BASE_DIR), 'static')
 
-
-
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # pour faire référence à l'user créé dans la classe 'User' du modèle 'authe'
-AUTH_USER_MODEL = 'authe.User'
-
+AUTH_USER_MODEL = 'authe.User' # A mettre si l'on a un modèle User personnalisé dans l'application 'authe'.
 
 LOGIN_URL = '/login/'  #  cela correspond à l'URL de la page de connexion
+LOGIN_REDIRECT_URL = 'feed'  # Redirige vers la page d'accueil après la connexion
+LOGOUT_REDIRECT_URL = 'login'   # Redirige vers la page de connexion après la déconnexion
+
+# la racine du site ('/) redirige vers 'feed' si l'utilisateur est connecté ou 'login' si l'utilisateur n'est pas connecté
+# redirections après login/signup réussis vers 'feed'

@@ -19,12 +19,10 @@
         </a>
         <div class="header__left">
             {% if user.is_authenticated %}
+                <p><a href="{% url 'feed' %}">Flux</a></p>
                 <p><a href="{% url 'logout' %}">Me déconnecter</a></p>
-                {# <p><a href="{% url 'user_profile' request.user %}">Mon Profil</a></p> #}
             {% endif %}
         </div>
-
-
     </header>
 
     <main class="container">
@@ -37,7 +35,3 @@
 
 </body>
 </html>
-
-
-
-

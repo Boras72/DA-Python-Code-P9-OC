@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Flux d'activités - LitReview{% endblock %}
+
+{% block content %}
+<div class="feed-container">
+    <div class="feed-header">
+        <h2>Flux d'activités</h2>
+        <div class="feed-actions">
+            <a href="{% url 'ticket_create' %}" class="btn">Demander une critique</a>
+            <a href="{% url 'create_ticket_review' %}" class="btn">Créer une critique</a>
+        </div>
+    </div>
+
+    {% if posts %}
+        <div class="posts-container">
+            {% for post in posts %}
+                <div class="post {% if post.content_type == 'TICKET' %}ticket{% else %}review{% endif %}">
+                    {% if post.content_type == 'TICKET' %}
+                        <div class="ticket-content">
+                            <div class="ticket-header">
+                                <h3>{{ post.title }}</h3>
+                                <span class="post-meta">Par {{ post.user.username }} le {{ post.time_created|date:"d/m/Y H:i" }}</span>
+                            </div>
+                            
+                            <p class="ticket-description">{{ post.description }}</p>
+                            
+                            {% if post.image %}
+                                <div class="ticket-image">
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                </div>
+                            {% endif %}
+
+                            {% if post.user.username == user %}
+                                <div class="ticket-actions">
+                                    <a href="{% url 'ticket_edit' post.id %}" class="btn-edit">Modifier</a>
+                                    <a href="{% url 'ticket_delete' post.id %}" class="btn-delete">Supprimer</a>
+                                </div>
+                            {% elif post.can_review %}
+                                <div class="ticket-actions">
+                                    <a href="{% url 'create_review' post.id %}" class="btn">Créer une critique</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="review-content">
+                            <div class="review-header">
+                                <h3>{{ post.headline }}</h3>
+                                <div class="rating">{{ post.rating_as_stars }}</div>
+                                <span class="post-meta">Par {{ post.user.username }} le {{ post.time_created|date:"d/m/Y H:i" }}</span>
+                            </div>
+
+                            <div class="review-body">
+                                {{ post.body|linebreaks }}
+                            </div>
+
+                            <div class="related-ticket">
+                                <h4>En réponse au ticket :</h4>
+                                <div class="ticket-preview">
+                                    <p class="ticket-title">{{ post.ticket.title }}</p>
+                                    <p class="ticket-author">par {{ post.ticket.user.username }}</p>
+                                </div>
+                            </div>
+
+                            {% if post.user.username == user %}
+                                <div class="review-actions">
+                                    <a href="{% url 'edit_review' post.id %}" class="btn-edit">Modifier</a>
+                                    <a href="{% url 'delete_review' post.id %}" class="btn-delete">Supprimer</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; première</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">précédente</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">suivante</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">dernière &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="no-posts">
+            <p>Aucun post à afficher. Commencez par suivre d'autres utilisateurs ou créer votre premier ticket !</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

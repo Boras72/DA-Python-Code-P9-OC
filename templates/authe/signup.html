@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription - LitReview{% endblock %}
+
+{% block content %}
+  <div class="form form__signup">  
+        <h2>Inscription</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="btn" type="submit" value="S'inscrire">
+        </form>
+    </div>
+{% endblock content%}
+
+
+  
+
+
