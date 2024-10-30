@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Abonnements - LITReview{% endblock %}
+
+{% block content %}
+<div class="subscriptions-container">
+    <div class="search-section">
+        <h2>Rechercher des utilisateurs</h2>
+        <form method="post" class="search-form">
+            {% csrf_token %}
+            <div class="search-box">
+                {{ form.username }}
+                <button type="submit" class="btn btn-search">Rechercher</button>
+            </div>
+        </form>
+        
+        {% if search_results %}
+            <div class="search-results">
+                <h3>Résultats de la recherche</h3>
+                <ul class="users-list">
+                    {% for user in search_results %}
+                        <li class="user-item">
+                            <span class="username">{{ user.username }}</span>
+                            <a href="{% url 'follow_user' user.id %}" class="btn btn-follow">Suivre</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="subscriptions-grid">
+        <div class="following-section">
+            <h2>Abonnements</h2>
+            <ul class="users-list">
+                {% for follow in following %}
+                    <li class="user-item">
+                        <span class="username">{{ follow.followed_user.username }}</span>
+                        <a href="{% url 'unfollow_user' follow.followed_user.id %}" class="btn btn-unfollow">
+                            Ne plus suivre
+                        </a>
+                    </li>
+                {% empty %}
+                    <li class="no-users">Vous ne suivez personne</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="followers-section">
+            <h2>Abonnés</h2>
+            <ul class="users-list">
+                {% for follower in followers %}
+                    <li class="user-item">
+                        <span class="username">{{ follower.user.username }}</span>
+                    </li>
+                {% empty %}
+                    <li class="no-users">Vous n'avez pas d'abonnés</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

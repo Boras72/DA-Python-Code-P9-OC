@@ -1,19 +1,68 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Créer un ticket et une critique{% endblock %}
+{% block title %}Créer une critique{% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <h3>Ticket</h3>
-    {{ ticket_form.as_p }}
-    <h3>Critique</h3>
-    {{ review_form.as_p }}
-    <button type="submit">Soumettre</button>
-</form>
+<div class="review-container">
+    <h2 class="page-title">Créer une critique</h2>
 
+    <form method="post" enctype="multipart/form-data" class="review-form">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <h3>Livre / Article</h3>
+            
+            <div class="form-group">
+                <label for="{{ ticket_form.title.id_for_label }}">Titre</label>
+                {{ ticket_form.title }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ ticket_form.description.id_for_label }}">Description</label>
+                {{ ticket_form.description }}
+            </div>
+
+            <div class="form-group">
+                <label>Image</label>
+                <div class="file-upload">
+                    <label for="{{ ticket_form.image.id_for_label }}" class="file-upload-btn">
+                        Télécharger fichier
+                    </label>
+                    {{ ticket_form.image }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Critique</h3>
+            
+            <div class="form-group">
+                <label for="{{ review_form.headline.id_for_label }}">Titre</label>
+                {{ review_form.headline }}
+            </div>
+
+            <div class="form-group">
+                <label>Note</label>
+                <div class="rating-group">
+                    {% for value in "012345" %}
+                        <label class="rating-option">
+                            <input type="radio" name="{{ review_form.rating.name }}" value="{{ value }}"
+                                   {% if review_form.rating.value|stringformat:"s" == value %}checked{% endif %}>
+                            - {{ value }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ review_form.body.id_for_label }}">Commentaire</label>
+                {{ review_form.body }}
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Envoyer</button>
+        </div>
+    </form>
+</div>
 {% endblock %}
-
-
-

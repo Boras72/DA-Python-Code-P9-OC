@@ -1,14 +1,67 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Créer une critique{% endblock %}
+{% block title %}Créer une critique{% endblock %}
 
 {% block content %}
-<h3>Ticket : {{ ticket.title }}</h3>  <!-- on peut mettre une balise <p> à la place de la balise "h3" -->
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Soumettre la critique</button>
-</form>
+<div class="review-container">
+    <h2 class="page-title">Créer une critique</h2>
 
+    <div class="ticket-response-box">
+        <p class="response-text">Vous êtes en train de poster en réponse à</p>
+        
+        <div class="ticket-details">
+            <div class="ticket-header">
+                <span>{{ ticket.user.username }} a demandé une critique</span>
+                <span class="ticket-date">{{ ticket.time_created|date:"H:i, j F Y" }}</span>
+            </div>
+            
+            <h3>{{ ticket.title }}</h3>
+            
+            {% if ticket.description %}
+                <p>{{ ticket.description }}</p>
+            {% endif %}
+            
+            {% if ticket.image %}
+                <div class="ticket-image">
+                    <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <form method="post" class="review-form">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <h3>Critique</h3>
+            
+            <div class="form-group">
+                <label for="{{ form.headline.id_for_label }}">Titre</label>
+                {{ form.headline }}
+            </div>
+
+            <div class="form-group">
+                <label>Note</label>
+                <div class="rating-group">
+                    {% for value in "012345" %}
+                        <label class="rating-option">
+                            <input type="radio" name="{{ form.rating.name }}" value="{{ value }}" 
+                                   {% if form.rating.value|stringformat:"s" == value %}checked{% endif %}>
+                            - {{ value }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.body.id_for_label }}">Commentaire</label>
+                {{ form.body }}
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Envoyer</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

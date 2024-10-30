@@ -4,34 +4,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}LitReviews{% endblock %}</title>
+    <title>{% block title %}LITReview{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="https://kit.fontawesome.com/8e873955b8.js" crossorigin="anonymous"></script>
-    <script src="{% static 'js/index.js' %}"></script>
+    <style>
+        /* Align all elements to center except the navigation links */
+        body {
+            text-align: center;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em;
+        }
+        .site-title {
+            margin: 0;
+        }
+        .main-nav {
+            display: flex;
+            gap: 1em;
+        }
+        .nav-link {
+            text-align: right;
+        }
+        main {
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <a href="{% url 'login' %}">      
-            <div class="header__center">
-                <img class="logo" src="{% static 'img/logo_black.png' %}">
-                <h1>LITReviews</h1>
-            </div>
-        </a>
-        <div class="header__left">
-            {% if user.is_authenticated %}
-                <p><a href="{% url 'feed' %}">Flux</a></p>
-                <p><a href="{% url 'logout' %}">Me déconnecter</a></p>
-            {% endif %}
-        </div>
+        <h1 class="site-title">LITReview</h1>
+        {% if user.is_authenticated %}
+        <nav class="main-nav">
+            <a href="{% url 'feed' %}" class="nav-link">Flux</a>
+            <a href="{% url 'posts' %}" class="nav-link">Posts</a>
+            <a href="{% url 'subscriptions' %}" class="nav-link">Abonnements</a>
+            <a href="{% url 'logout' %}" class="nav-link">Se déconnecter</a>
+        </nav>
+        {% endif %}
     </header>
 
-    <main class="container">
+    <main>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
         {% block content %}{% endblock %}
     </main>
-
-    <footer>
-        <!-- un pied de page si nécessaire -->
-    </footer>
-
 </body>
 </html>
