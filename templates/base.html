@@ -6,32 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LITReview{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        /* Align all elements to center except the navigation links */
-        body {
-            text-align: center;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1em;
-        }
-        .site-title {
-            margin: 0;
-        }
-        .main-nav {
-            display: flex;
-            gap: 1em;
-        }
-        .nav-link {
-            text-align: right;
-        }
-        main {
-            max-width: 800px;
-            margin: auto;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -46,7 +20,7 @@
         {% endif %}
     </header>
 
-    <main>
+    <main class="container">
         {% if messages %}
             <div class="messages">
                 {% for message in messages %}

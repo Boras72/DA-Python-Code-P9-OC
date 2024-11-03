@@ -3,61 +3,128 @@
 {% block title %}Abonnements - LITReview{% endblock %}
 
 {% block content %}
-<div class="subscriptions-container">
-    <div class="search-section">
-        <h2>Rechercher des utilisateurs</h2>
-        <form method="post" class="search-form">
-            {% csrf_token %}
-            <div class="search-box">
-                {{ form.username }}
-                <button type="submit" class="btn btn-search">Rechercher</button>
-            </div>
-        </form>
-        
-        {% if search_results %}
-            <div class="search-results">
-                <h3>Résultats de la recherche</h3>
-                <ul class="users-list">
-                    {% for user in search_results %}
-                        <li class="user-item">
-                            <span class="username">{{ user.username }}</span>
-                            <a href="{% url 'follow_user' user.id %}" class="btn btn-follow">Suivre</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-    </div>
-
-    <div class="subscriptions-grid">
-        <div class="following-section">
-            <h2>Abonnements</h2>
-            <ul class="users-list">
-                {% for follow in following %}
-                    <li class="user-item">
-                        <span class="username">{{ follow.followed_user.username }}</span>
-                        <a href="{% url 'unfollow_user' follow.followed_user.id %}" class="btn btn-unfollow">
-                            Ne plus suivre
-                        </a>
-                    </li>
-                {% empty %}
-                    <li class="no-users">Vous ne suivez personne</li>
-                {% endfor %}
-            </ul>
+<div class="review-container">
+    <div class="subscriptions-container">
+        <div class="search-section">
+            <h2 class="page-title">Rechercher des utilisateurs</h2>
+            <form method="post" class="search-form">
+                {% csrf_token %}
+                <div class="form-group search-box">
+                    {{ form.username }}
+                    <button type="submit" class="btn-submit">Rechercher</button>
+                </div>
+            </form>
+            
+            {% if search_results %}
+                <div class="results-section">
+                    <h3>Résultats de la recherche</h3>
+                    <div class="users-list">
+                        {% for user in search_results %}
+                            <div class="user-card">
+                                <span class="username">{{ user.username }}</span>
+                                <a href="{% url 'follow_user' user.id %}" class="btn-action">Suivre</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
-        <div class="followers-section">
-            <h2>Abonnés</h2>
-            <ul class="users-list">
-                {% for follower in followers %}
-                    <li class="user-item">
-                        <span class="username">{{ follower.user.username }}</span>
-                    </li>
-                {% empty %}
-                    <li class="no-users">Vous n'avez pas d'abonnés</li>
-                {% endfor %}
-            </ul>
+        <div class="subscriptions-grid">
+            <div class="following-section">
+                <h3>Abonnements</h3>
+                <div class="users-list">
+                    {% for follow in following %}
+                        <div class="user-card">
+                            <span class="username">{{ follow.followed_user.username }}</span>
+                            <a href="{% url 'unfollow_user' follow.followed_user.id %}" class="btn-action btn-delete">
+                                Ne plus suivre
+                            </a>
+                        </div>
+                    {% empty %}
+                        <p class="no-users">Vous ne suivez personne</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="followers-section">
+                <h3>Abonnés</h3>
+                <div class="users-list">
+                    {% for follower in followers %}
+                        <div class="user-card">
+                            <span class="username">{{ follower.user.username }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="no-users">Vous n'avez pas d'abonnés</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .subscriptions-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .search-section {
+        margin-bottom: 3rem;
+    }
+
+    .search-box {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .search-box input {
+        flex: 1;
+    }
+
+    .results-section {
+        margin-top: 2rem;
+    }
+
+    .subscriptions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .users-list {
+        margin-top: 1rem;
+    }
+
+    .user-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .username {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .no-users {
+        text-align: center;
+        color: #666;
+        padding: 1rem;
+        background: #f5f5f5;
+        border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+        .subscriptions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 {% endblock %}

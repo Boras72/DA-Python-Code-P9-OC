@@ -1,169 +1,197 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}LITReview - Flux{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        /* Align all elements to center except the navigation links */
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            color: #333;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1em;
-        }
-        .site-title {
-            margin: 0;
-        }
-        .main-nav {
-            display: flex;
-            gap: 1em;
-        }
-        .nav-link {
-            text-align: right;
-            color: #333;
-            text-decoration: none;
-        }
-        main {
-            max-width: 800px;
-            margin: auto;
-        }
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .action-button {
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #333;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            font-family: Arial, sans-serif;
-        }
-        .action-button:hover {
-            background-color: #555;
-        }
-        .post-container {
-            text-align: center;
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            background-color: #f9f9f9;
-            position: relative;
-        }
-        .post-header {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .post-date {
-            font-size: 0.8em;
-            color: #666;
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-        }
-        .post-content h3 {
-            font-size: 1.1em;
-            margin: 10px 0;
-        }
-        .post-content p {
-            font-size: 1em;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1 class="site-title">LITReview</h1>
-        {% if user.is_authenticated %}
-        <nav class="main-nav">
-            <a href="{% url 'feed' %}" class="nav-link">Flux</a>
-            <a href="{% url 'posts' %}" class="nav-link">Posts</a>
-            <a href="{% url 'subscriptions' %}" class="nav-link">Abonnements</a>
-            <a href="{% url 'logout' %}" class="nav-link">Se déconnecter</a>
-        </nav>
-        {% endif %}
-    </header>
+{% extends 'base.html' %}
 
-    <main>
-        <div class="action-buttons">
-            <a href="{% url 'ticket_create' %}" class="action-button">Demander une critique</a>
-            <a href="{% url 'create_ticket_review' %}" class="action-button">Créer une critique</a>
-        </div>
+{% block title %}Flux - LITReview{% endblock %}
 
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="message {{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-        
-        {% block content %}
-        <div class="feed-posts">
-            {% for post in posts %}
-                <div class="post-container">
-                    <div class="post-header">
-                        {% if post.user == request.user %}
-                            {% if post.content_type == 'TICKET' %}
-                                Vous avez demandé une critique :
-                            {% else %}
-                                Vous avez publié une critique :
-                            {% endif %}
-                        {% else %}
-                            {{ post.user.username }} a publié :
-                        {% endif %}
-                    </div>
-                    <div class="post-content">
+{% block content %}
+<div class="review-container">
+    <div class="action-buttons">
+        <a href="{% url 'ticket_create' %}" class="action-button">Créer un Ticket</a>
+        <a href="{% url 'create_standalone_review' %}" class="action-button">Créer une critique</a>
+        <a href="{% url 'create_ticket_review' %}" class="action-button">Créer une critique en réponse à un ticket</a>
+    </div>
+
+    <div class="feed-posts">
+        {% for post in posts %}
+            <div class="post-frame">
+                <div class="post-type-header">
+                    {% if post.user == request.user %}
                         {% if post.content_type == 'TICKET' %}
-                            <h3>{{ post.title }}</h3>
+                            <span class="post-type">Vous avez demandé une critique</span>
+                        {% else %}
+                            <span class="post-type">Vous avez publié une critique</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="post-type">{{ post.user.username }} a publié</span>
+                    {% endif %}
+                </div>
+
+                <div class="post-content">
+                    {% if post.content_type == 'TICKET' %}
+                        <div class="form-section">
+                            <h3 class="post-title">{{ post.title }}</h3>
                             {% if post.description %}
-                                <p>{{ post.description }}</p>
-                            {% endif %}
-                            {% if post.image %}
-                                <div class="post-image">
-                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                <div class="description-section">
+                                    <p>{{ post.description }}</p>
                                 </div>
                             {% endif %}
-                        {% else %}
-                            <h3>{{ post.headline }} - {{ post.rating_as_stars }}</h3>
-                            <p>{{ post.body }}</p>
-                            <div class="ticket-box">
-                                <div class="ticket-header">Ticket - {{ post.ticket.user.username }}</div>
-                                <h4>{{ post.ticket.title }}</h4>
-                                {% if post.ticket.image %}
-                                    <div class="ticket-image">
-                                        <img src="{{ post.ticket.image.url }}" alt="{{ post.ticket.title }}">
-                                    </div>
-                                {% endif %}
+                            {% if post.image %}
+                                <div class="image-section">
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="form-section">
+                            <div class="review-header">
+                                <h3 class="post-title">{{ post.headline }}</h3>
+                                <div class="rating">{{ post.rating_as_stars }}</div>
                             </div>
-                        {% endif %}
-                    </div>
-                    <div class="post-date">
-                        {{ post.time_created|date:"H:i, j F Y" }}
-                    </div>
+                            
+                            <div class="review-body">
+                                <p>{{ post.body }}</p>
+                            </div>
+
+                            {% if post.ticket %}
+                                <div class="ticket-section">
+                                    <div class="ticket-header">
+                                        <span>Ticket de {{ post.ticket.user.username }}</span>
+                                    </div>
+                                    <div class="ticket-content">
+                                        <h4>{{ post.ticket.title }}</h4>
+                                        {% if post.ticket.image %}
+                                            <div class="image-section">
+                                                <img src="{{ post.ticket.image.url }}" alt="{{ post.ticket.title }}" class="ticket-image">
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
-            {% empty %}
-                <p class="no-posts">Aucun post à afficher</p>
-            {% endfor %}
-        </div>
-        {% endblock %}
-    </main>
-</body>
-</html>
+
+                <div class="post-footer">
+                    <span class="post-date">{{ post.time_created|date:"H:i, j F Y" }}</span>
+                </div>
+            </div>
+        {% empty %}
+            <div class="no-posts">
+                <p>Aucun post à afficher</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .review-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .post-frame {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        position: relative;
+    }
+
+    .post-type-header {
+        border-bottom: 2px solid #eee;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-weight: bold;
+        color: #666;
+    }
+
+    .post-content {
+        padding: 1rem 0;
+    }
+
+    .form-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .post-title {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .description-section, .review-body {
+        background: #f9f9f9;
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1rem 0;
+    }
+
+    .review-header {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .rating {
+        color: #ffd700;
+        font-size: 1.2rem;
+        margin: 0.5rem 0;
+    }
+
+    .ticket-section {
+        background: #f5f5f5;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .ticket-header {
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .ticket-content {
+        text-align: center;
+    }
+
+    .image-section {
+        text-align: center;
+        margin: 1rem 0;
+    }
+
+    .post-image, .ticket-image {
+        max-width: 300px;  /* Réduit la largeur maximale des images */
+        height: auto;
+        border-radius: 4px;
+    }
+
+    .post-footer {
+        text-align: right;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .post-date {
+        color: #888;
+        font-size: 0.9rem;
+    }
+
+    .no-posts {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}

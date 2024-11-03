@@ -22,25 +22,20 @@ Including another URLconf
 # Attention: 'login' est utilisé ici au lieu de 'connexion'. Utiliser toujours les mêmes noms dans les vues et les templates. 
 # Il est conseillé de regrouper les URLs par application, utiliser plutot 'include()' pour séparer les URLs de 'authe' et 'func' dans leurs propres fichiers urls.py.
 
-
-
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import redirect 
+from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
 
 def root_redirect(request):
     if request.user.is_authenticated:
         return redirect('feed')
-    else:
-        return redirect('login')
+    return redirect('login')
 
 urlpatterns = [
     path('', root_redirect, name='root'),
     path('admin/', admin.site.urls),
-    path('auth/', include('authe.urls')),  # Changé de '' à 'auth/'
+    path('auth/', include('authe.urls')),
     path('', include('func.urls')),
-    
-]
-#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -24,24 +24,19 @@ class Ticket(models.Model):
         return f"{self.title} - by {self.user.username}"
 
     def can_be_reviewed_by(self, user):
-        """Vérifie si un utilisateur peut créer une critique pour ce ticket"""
         if not user or user.is_anonymous:
             return False
-        # L'auteur ne peut pas critiquer son propre ticket
         if user == self.user:
             return False
-        # Vérifier si l'utilisateur n'a pas déjà critiqué ce ticket
         return not Review.objects.filter(ticket=self, user=user).exists()
 
-        # Vérifier si l'utilisateur suit l'auteur du ticket
-        #if not UserFollows.objects.filter(user=user,       followed_user=self.user).exists():
-            #return False
-      
 class Review(models.Model):
     ticket = models.ForeignKey(
         to=Ticket,
         on_delete=models.CASCADE,
-        related_name='reviews'
+        related_name='reviews',
+        null=True,
+        blank=True
     )
     rating = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(5)]
@@ -64,17 +59,16 @@ class Review(models.Model):
     def clean(self):
         if self.rating < 0 or self.rating > 5:
             raise ValidationError('La note doit être comprise entre 0 et 5')
-        if Review.objects.filter(ticket=self.ticket, user=self.user).exists():
+        if self.ticket and Review.objects.filter(ticket=self.ticket, user=self.user).exists():
             raise ValidationError('Vous avez déjà créé une critique pour ce ticket')
-        if not self.ticket.can_be_reviewed_by(self.user):
-            raise ValidationError('Vous devez suivre l\'auteur du ticket pour pouvoir le critiquer')
 
     def __str__(self):
-        return f"Review of {self.ticket.title} by {self.user.username}"
+        if self.ticket:
+            return f"Review of {self.ticket.title} by {self.user.username}"
+        return f"Standalone review by {self.user.username}"
 
     @property
     def rating_as_stars(self):
-        """Retourne la note sous forme d'étoiles"""
         return '★' * self.rating + '☆' * (5 - self.rating)
 
 class UserFollows(models.Model):

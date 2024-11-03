@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Créer une critique{% endblock %}
+{% block title %}Créer une critique en réponse à un ticket{% endblock %}
 
 {% block content %}
-<div class="review-container">
-    <h2 class="page-title">Créer une critique</h2>
+<div class="review-container create-ticket-review">
+    <h2 class="page-title">Créer une critique en réponse à un ticket</h2>
 
     <form method="post" enctype="multipart/form-data" class="review-form">
         {% csrf_token %}

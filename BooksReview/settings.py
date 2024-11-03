@@ -10,18 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+"""
+Django settings for BooksReview project.
+"""
+
+
+
+
+
+
 from pathlib import Path
 import os
 
-
-# Définition de BASE_DIR :
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
-#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@&oc)2$gj6tltxr(c45=i)on=-1%n5_@7jkd3!&*@q2ag=q8@b'
@@ -31,9 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,11 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authe',
     'func',
-    
-    
 ]
 
-    
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,15 +57,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'BooksReview.urls'
 
-
-# Configuration des templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates',  # chemins des templates
-            BASE_DIR / 'func' / 'Templates',
+            BASE_DIR / 'templates',
             BASE_DIR / 'authe' / 'templates',
+            BASE_DIR / 'func' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -82,27 +77,14 @@ TEMPLATES = [
     },
 ]
 
-
-
 WSGI_APPLICATION = 'BooksReview.wsgi.application'
 
-
-
-
-# Configuration de la base de données
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -119,42 +101,26 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-#DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+# Static files configuration
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Configuration des fichiers statiques
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Ceci est différent de STATICFILES_DIRS
-#STATIC_ROOT = os.path.join(str(BASE_DIR), 'static')
-
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# pour faire référence à l'user créé dans la classe 'User' du modèle 'authe'
-AUTH_USER_MODEL = 'authe.User' # A mettre si l'on a un modèle User personnalisé dans l'application 'authe'.
+AUTH_USER_MODEL = 'authe.User'
 
-LOGIN_URL = '/login/'  #  cela correspond à l'URL de la page de connexion
-LOGIN_REDIRECT_URL = 'feed'  # Redirige vers la page d'accueil après la connexion
-LOGOUT_REDIRECT_URL = 'login'   # Redirige vers la page de connexion après la déconnexion
-
+# Redirection settings
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'feed'
+LOGOUT_REDIRECT_URL = 'login'
 # la racine du site ('/) redirige vers 'feed' si l'utilisateur est connecté ou 'login' si l'utilisateur n'est pas connecté
 # redirections après login/signup réussis vers 'feed'

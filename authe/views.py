@@ -1,9 +1,8 @@
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect
 from django.views.generic import View
-from .forms import SignupForm, LoginForm
 from django.contrib.auth.decorators import login_required
-
+from .forms import SignupForm, LoginForm
 
 class SignupPage(View):
     def get(self, request):
@@ -29,15 +28,10 @@ def login_view(request):
                 login(request, user)
                 return redirect('feed')
             else:
-                form.add_error(None, 'Identifiants invalides')
+                form.add_error(None, 'Invalid credentials')
     else:
         form = LoginForm()
     return render(request, 'authe/login.html', {'form': form})
-
-#def logout_user(request):
-    #if request.user.is_authenticated:
-    #    logout(request)
-    #return redirect('login')
 
 @login_required
 def logout_user(request):

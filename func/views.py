@@ -7,30 +7,27 @@ from itertools import chain
 from .forms import TicketForm, ReviewForm, UserSearchForm, UserFollowsForm
 from .models import Ticket, Review, UserFollows
 from django.contrib.auth import get_user_model
+from django.db import transaction
 
 User = get_user_model()
 
 @login_required(login_url='login')
 def feed(request):
-    # Récupérer les utilisateurs suivis
     followed_users = UserFollows.objects.filter(user=request.user).values_list('followed_user', flat=True)
     
-    # Récupérer les tickets et critiques
     followed_tickets = Ticket.objects.filter(user__in=followed_users)
     followed_reviews = Review.objects.filter(user__in=followed_users)
     user_tickets = Ticket.objects.filter(user=request.user)
     user_reviews = Review.objects.filter(user=request.user)
     response_reviews = Review.objects.filter(ticket__in=user_tickets)
 
-    # Combiner et trier les posts
     all_posts = sorted(
         chain(followed_tickets, followed_reviews, user_tickets, user_reviews, response_reviews),
         key=lambda x: x.time_created,
         reverse=True
     )
 
-    # Pagination
-    paginator = Paginator(all_posts, 10)  # 10 posts par page
+    paginator = Paginator(all_posts, 10)
     page = request.GET.get('page', 1)
     
     try:
@@ -40,7 +37,6 @@ def feed(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
-    # Ajouter le type de contenu pour chaque post
     for post in posts:
         if isinstance(post, Ticket):
             post.content_type = 'TICKET'
@@ -53,6 +49,19 @@ def feed(request):
         'page_obj': posts,
     }
     return render(request, 'func/feed.html', context)
+
+@login_required(login_url='login')
+def create_standalone_review(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.save()
+            return redirect('feed')
+    else:
+        form = ReviewForm()
+    return render(request, 'func/create_standalone_review.html', {'form': form})
 
 @login_required(login_url='login')
 def ticket_create(request):
@@ -109,40 +118,33 @@ def create_review(request, ticket_id):
         form = ReviewForm()
     return render(request, 'func/create_review.html', {'form': form, 'ticket': ticket})
 
-
-
 @login_required(login_url='login')
 def create_ticket_review(request):
+    ticket_form = TicketForm()
+    review_form = ReviewForm()
+    
     if request.method == 'POST':
         ticket_form = TicketForm(request.POST, request.FILES)
         review_form = ReviewForm(request.POST)
         
         if ticket_form.is_valid() and review_form.is_valid():
-            # Créer et sauvegarder le ticket d'abord
-            ticket = ticket_form.save(commit=False)
-            ticket.user = request.user
-            ticket.save()
-            
-            # Créer et sauvegarder la review ensuite
-            review = review_form.save(commit=False)
-            review.user = request.user
-            review.ticket = ticket  # Associer le ticket sauvegardé
-            review.save()
+            with transaction.atomic():
+                ticket = ticket_form.save(commit=False)
+                ticket.user = request.user
+                ticket.save()
+                
+                review = review_form.save(commit=False)
+                review.user = request.user
+                review.ticket = ticket
+                review.save()
             
             return redirect('feed')
-    else:
-        ticket_form = TicketForm()
-        review_form = ReviewForm()
     
     context = {
         'ticket_form': ticket_form,
         'review_form': review_form
     }
     return render(request, 'func/create_ticket_review.html', context)
-
-
-
-
 
 @login_required(login_url='login')
 def edit_review(request, review_id):
@@ -170,18 +172,15 @@ def delete_review(request, review_id):
 
 @login_required(login_url='login')
 def posts(request):
-    # Récupérer tous les tickets et reviews de l'utilisateur
     user_tickets = Ticket.objects.filter(user=request.user)
     user_reviews = Review.objects.filter(user=request.user)
     
-    # Combiner et trier les posts
     all_posts = sorted(
         chain(user_tickets, user_reviews),
         key=lambda x: x.time_created,
         reverse=True
     )
     
-    # Pagination
     paginator = Paginator(all_posts, 10)
     page = request.GET.get('page', 1)
     
@@ -192,7 +191,6 @@ def posts(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     
-    # Ajouter le type de contenu pour chaque post
     for post in posts:
         if isinstance(post, Ticket):
             post.content_type = 'TICKET'
@@ -213,7 +211,6 @@ def subscriptions(request):
             ~Q(id=request.user.id)
         )
     
-    # Récupérer les abonnements et abonnés
     following = UserFollows.objects.filter(user=request.user)
     followers = UserFollows.objects.filter(followed_user=request.user)
     
