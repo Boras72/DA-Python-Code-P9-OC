@@ -1,14 +1,133 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Supprimer le ticket{% endblock %}
+{% block title %}Supprimer le ticket - LITReview{% endblock %}
 
 {% block content %}
-<p>Êtes-vous sûr de vouloir supprimer ce ticket : "{{ ticket.title }}" ?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Oui, supprimer</button>
-</form>
-<a href="{% url 'feed' %}">Annuler</a>
-{% endblock %}
+<div class="review-container">
+    <div class="delete-container">
+        <h2 class="page-title">Supprimer le ticket</h2>
 
+        <div class="ticket-preview">
+            <h3>{{ ticket.title }}</h3>
+            {% if ticket.description %}
+                <p>{{ ticket.description }}</p>
+            {% endif %}
+            {% if ticket.image %}
+                <div class="ticket-image">
+                    <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="confirmation-message">
+            <p>Êtes-vous sûr de vouloir supprimer ce ticket ?</p>
+            <p class="warning">Cette action est irréversible.</p>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn-delete">Supprimer</button>
+                <a href="{% url 'posts' %}" class="btn-cancel">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .delete-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        text-align: center;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+
+    .ticket-preview {
+        background: #f8f9fa;
+        border-radius: 4px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .ticket-preview h3 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .ticket-preview p {
+        color: #666;
+        margin-bottom: 1rem;
+    }
+
+    .ticket-image {
+        text-align: center;
+        margin: 1rem 0;
+    }
+
+    .ticket-image img {
+        max-width: 300px;
+        height: auto;
+        border-radius: 4px;
+    }
+
+    .confirmation-message {
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    .warning {
+        color: #dc3545;
+        font-weight: 500;
+        margin-top: 0.5rem;
+    }
+
+    .delete-form {
+        margin-top: 2rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-delete,
+    .btn-cancel {
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.2s;
+        flex: 1;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-cancel:hover {
+        background-color: #545b62;
+    }
+</style>
+{% endblock %}

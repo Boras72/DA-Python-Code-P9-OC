@@ -1,12 +1,198 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Modifier le ticket{% endblock %}
+{% block title %}Modifier le ticket - LITReview{% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Modifier</button>
-</form>
+<div class="review-container">
+    <div class="form-container">
+        <h2 class="page-title">Modifier le ticket</h2>
+
+        <form method="post" enctype="multipart/form-data" class="form-content">
+            {% csrf_token %}
+            
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">Titre</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <div class="error-message">{{ form.title.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="error-message">{{ form.description.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">Image</label>
+                <div class="file-upload">
+                    {{ form.image }}
+                    {% if form.image.errors %}
+                        <div class="error-message">{{ form.image.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                {% if ticket.image %}
+                    <div class="current-image">
+                        <p>Image actuelle :</p>
+                        <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}" class="preview-image">
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Enregistrer</button>
+                <a href="{% url 'posts' %}" class="btn-cancel">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        text-align: center;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+
+    .form-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        color: #555;
+        font-weight: 500;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .file-upload {
+        border: 2px dashed #ddd;
+        padding: 1rem;
+        border-radius: 4px;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .current-image {
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .current-image p {
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    .preview-image {
+        max-width: 300px;
+        height: auto;
+        border-radius: 4px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-submit,
+    .btn-cancel {
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.2s;
+    }
+
+    .btn-submit {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        flex: 1;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        flex: 1;
+    }
+
+    .btn-cancel:hover {
+        background-color: #545b62;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .messages {
+        margin-bottom: 1rem;
+    }
+
+    .message {
+        padding: 0.75rem;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+    }
+
+    .message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+</style>
 {% endblock %}

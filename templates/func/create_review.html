@@ -1,43 +1,43 @@
 {% extends 'base.html' %}
 
-{% block title %}Créer une critique{% endblock %}
+{% block title %}Créer une critique - LITReview{% endblock %}
 
 {% block content %}
-<div class="review-container create-review">
-    <h2 class="page-title">Créer une critique</h2>
+<div class="review-container">
+    <div class="form-container">
+        <h2 class="page-title">Créer une critique</h2>
 
-    <div class="ticket-response-box">
-        <p class="response-text">Vous êtes en train de poster en réponse à</p>
-        
         <div class="ticket-details">
-            <div class="ticket-header">
-                <span>{{ ticket.user.username }} a demandé une critique</span>
-                <span class="ticket-date">{{ ticket.time_created|date:"H:i, j F Y" }}</span>
-            </div>
-            
-            <h3>{{ ticket.title }}</h3>
-            
-            {% if ticket.description %}
+            <h3 class="ticket-title">En réponse au ticket :</h3>
+            <div class="ticket-content">
+                <h4>{{ ticket.title }}</h4>
                 <p>{{ ticket.description }}</p>
-            {% endif %}
+                {% if ticket.image %}
+                    <div class="ticket-image">
+                        <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+                    </div>
+                {% endif %}
+                <p class="ticket-meta">Par {{ ticket.user.username }} - {{ ticket.time_created|date:"j F Y" }}</p>
+            </div>
+        </div>
+
+        <form method="post" class="form-content">
+            {% csrf_token %}
             
-            {% if ticket.image %}
-                <div class="ticket-image">
-                    <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
                 </div>
             {% endif %}
-        </div>
-    </div>
-
-    <form method="post" class="review-form">
-        {% csrf_token %}
-        
-        <div class="form-section">
-            <h3>Critique</h3>
             
             <div class="form-group">
                 <label for="{{ form.headline.id_for_label }}">Titre</label>
                 {{ form.headline }}
+                {% if form.headline.errors %}
+                    <div class="error-message">{{ form.headline.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
@@ -45,23 +45,193 @@
                 <div class="rating-group">
                     {% for value in "012345" %}
                         <label class="rating-option">
-                            <input type="radio" name="{{ form.rating.name }}" value="{{ value }}" 
+                            <input type="radio" name="{{ form.rating.name }}" value="{{ value }}"
                                    {% if form.rating.value|stringformat:"s" == value %}checked{% endif %}>
-                            - {{ value }}
+                            {{ value }}
                         </label>
                     {% endfor %}
                 </div>
+                {% if form.rating.errors %}
+                    <div class="error-message">{{ form.rating.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="{{ form.body.id_for_label }}">Commentaire</label>
                 {{ form.body }}
+                {% if form.body.errors %}
+                    <div class="error-message">{{ form.body.errors.0 }}</div>
+                {% endif %}
             </div>
-        </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-submit">Envoyer</button>
-        </div>
-    </form>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Publier</button>
+                <a href="{% url 'feed' %}" class="btn-cancel">Annuler</a>
+            </div>
+        </form>
+    </div>
 </div>
+
+<style>
+    .form-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        text-align: center;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+
+    .ticket-details {
+        background: #f8f9fa;
+        border-radius: 4px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .ticket-title {
+        color: #555;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .ticket-content {
+        padding: 1rem;
+        background: white;
+        border-radius: 4px;
+    }
+
+    .ticket-image {
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    .ticket-image img {
+        max-width: 300px;
+        height: auto;
+        border-radius: 4px;
+    }
+
+    .ticket-meta {
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+    }
+
+    .form-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        color: #555;
+        font-weight: 500;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .rating-group {
+        display: flex;
+        gap: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    .rating-option {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-submit,
+    .btn-cancel {
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.2s;
+    }
+
+    .btn-submit {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        flex: 1;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        flex: 1;
+    }
+
+    .btn-cancel:hover {
+        background-color: #545b62;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .messages {
+        margin-bottom: 1rem;
+    }
+
+    .message {
+        padding: 0.75rem;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+    }
+
+    .message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+</style>
 {% endblock %}

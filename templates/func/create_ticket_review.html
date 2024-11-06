@@ -1,44 +1,63 @@
 {% extends 'base.html' %}
 
-{% block title %}Créer une critique en réponse à un ticket{% endblock %}
+{% block title %}Créer une critique - LITReview{% endblock %}
 
 {% block content %}
-<div class="review-container create-ticket-review">
-    <h2 class="page-title">Créer une critique en réponse à un ticket</h2>
+<div class="review-container">
+    <div class="form-container">
+        <h2 class="page-title">Créer une critique</h2>
 
-    <form method="post" enctype="multipart/form-data" class="review-form">
-        {% csrf_token %}
-        
-        <div class="form-section">
-            <h3>Livre / Article</h3>
+        <form method="post" enctype="multipart/form-data" class="form-content">
+            {% csrf_token %}
             
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="section-divider">
+                <h3>Livre / Article</h3>
+            </div>
+
             <div class="form-group">
                 <label for="{{ ticket_form.title.id_for_label }}">Titre</label>
                 {{ ticket_form.title }}
+                {% if ticket_form.title.errors %}
+                    <div class="error-message">{{ ticket_form.title.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="{{ ticket_form.description.id_for_label }}">Description</label>
                 {{ ticket_form.description }}
+                {% if ticket_form.description.errors %}
+                    <div class="error-message">{{ ticket_form.description.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
-                <label>Image</label>
+                <label for="{{ ticket_form.image.id_for_label }}">Image</label>
                 <div class="file-upload">
-                    <label for="{{ ticket_form.image.id_for_label }}" class="file-upload-btn">
-                        Télécharger fichier
-                    </label>
                     {{ ticket_form.image }}
+                    {% if ticket_form.image.errors %}
+                        <div class="error-message">{{ ticket_form.image.errors.0 }}</div>
+                    {% endif %}
                 </div>
             </div>
-        </div>
 
-        <div class="form-section">
-            <h3>Critique</h3>
-            
+            <div class="section-divider">
+                <h3>Critique</h3>
+            </div>
+
             <div class="form-group">
                 <label for="{{ review_form.headline.id_for_label }}">Titre</label>
                 {{ review_form.headline }}
+                {% if review_form.headline.errors %}
+                    <div class="error-message">{{ review_form.headline.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
@@ -48,21 +67,175 @@
                         <label class="rating-option">
                             <input type="radio" name="{{ review_form.rating.name }}" value="{{ value }}"
                                    {% if review_form.rating.value|stringformat:"s" == value %}checked{% endif %}>
-                            - {{ value }}
+                            {{ value }}
                         </label>
                     {% endfor %}
                 </div>
+                {% if review_form.rating.errors %}
+                    <div class="error-message">{{ review_form.rating.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="{{ review_form.body.id_for_label }}">Commentaire</label>
                 {{ review_form.body }}
+                {% if review_form.body.errors %}
+                    <div class="error-message">{{ review_form.body.errors.0 }}</div>
+                {% endif %}
             </div>
-        </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-submit">Envoyer</button>
-        </div>
-    </form>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Publier</button>
+                <a href="{% url 'feed' %}" class="btn-cancel">Annuler</a>
+            </div>
+        </form>
+    </div>
 </div>
+
+<style>
+    .form-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        text-align: center;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+
+    .section-divider {
+        margin: 2rem 0 1rem;
+        padding: 0.5rem;
+        background-color: #f8d7da;
+        border-radius: 4px;
+    }
+
+    .section-divider h3 {
+        color: #721c24;
+        font-size: 1.2rem;
+        margin: 0;
+    }
+
+    .form-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        color: #555;
+        font-weight: 500;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .file-upload {
+        border: 2px dashed #ddd;
+        padding: 1rem;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .rating-group {
+        display: flex;
+        gap: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    .rating-option {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-submit,
+    .btn-cancel {
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.2s;
+    }
+
+    .btn-submit {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        flex: 1;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        flex: 1;
+    }
+
+    .btn-cancel:hover {
+        background-color: #545b62;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .messages {
+        margin-bottom: 1rem;
+    }
+
+    .message {
+        padding: 0.75rem;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+    }
+
+    .message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+</style>
 {% endblock %}

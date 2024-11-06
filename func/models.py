@@ -4,9 +4,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-
 class Ticket(models.Model):
-    title = models.CharField(max_length=128, verbose_name='Title')
+    title = models.CharField(max_length=128, verbose_name='Titre')
     description = models.TextField(max_length=2048, blank=True)
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
@@ -22,7 +21,7 @@ class Ticket(models.Model):
         verbose_name_plural = 'Tickets'
 
     def __str__(self):
-        return f"{self.title} - by {self.user.username}"
+        return f"{self.title} - par {self.user.username}"
 
     def can_be_reviewed_by(self, user):
         """Vérifie si un utilisateur peut créer une critique pour ce ticket"""
@@ -33,15 +32,11 @@ class Ticket(models.Model):
         # Vérifie si l'utilisateur a déjà créé une critique pour ce ticket
         return not Review.objects.filter(ticket=self, user=user).exists()
 
-
-
 class Review(models.Model):
     ticket = models.ForeignKey(
         to=Ticket,
         on_delete=models.CASCADE,
-        related_name='reviews',
-        null=True,
-        blank=True
+        related_name='reviews'
     )
     rating = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(5)]
@@ -58,25 +53,21 @@ class Review(models.Model):
     class Meta:
         ordering = ['-time_created']
         unique_together = ['ticket', 'user']  # Empêche les critiques multiples
-        verbose_name = 'Review'
-        verbose_name_plural = 'Reviews'
+        verbose_name = 'Critique'
+        verbose_name_plural = 'Critiques'
 
     def clean(self):
         if self.rating < 0 or self.rating > 5:
             raise ValidationError('La note doit être comprise entre 0 et 5')
-        if self.ticket and Review.objects.filter(ticket=self.ticket, user=self.user).exists():
+        if Review.objects.filter(ticket=self.ticket, user=self.user).exists():
             raise ValidationError('Vous avez déjà créé une critique pour ce ticket')
 
     def __str__(self):
-        if self.ticket:
-            return f"Review of {self.ticket.title} by {self.user.username}"
-        return f"Standalone review by {self.user.username}"
+        return f"Critique de {self.ticket.title} par {self.user.username}"
 
     @property
     def rating_as_stars(self):
         return '★' * self.rating + '☆' * (5 - self.rating)
-
-
 
 class UserFollows(models.Model):
     user = models.ForeignKey(
@@ -94,12 +85,12 @@ class UserFollows(models.Model):
     class Meta:
         unique_together = ('user', 'followed_user')
         ordering = ['-created_at']
-        verbose_name = 'User follow'
-        verbose_name_plural = 'User follows'
+        verbose_name = 'Abonnement'
+        verbose_name_plural = 'Abonnements'
 
     def clean(self):
         if self.user == self.followed_user:
             raise ValidationError("Un utilisateur ne peut pas se suivre lui-même")
 
     def __str__(self):
-        return f"{self.user.username} follows {self.followed_user.username}"
+        return f"{self.user.username} suit {self.followed_user.username}"

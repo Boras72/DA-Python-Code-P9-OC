@@ -1,19 +1,83 @@
 {% extends 'base.html' %}
 
-{% block title %}Inscription - LitReview{% endblock %}
+{% block title %}Inscription - LITReview{% endblock %}
 
 {% block content %}
-  <div class="form form__signup">  
-        <h2>Inscription</h2>
-        <form method="post">
+<div class="review-container">
+    <div class="auth-form">
+        <h2 class="page-title">Inscription</h2>
+        
+        <form method="post" class="form-content">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input class="btn" type="submit" value="S'inscrire">
+            
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+                {{ form.username }}
+                {% if form.username.help_text %}
+                    <small class="help-text">{{ form.username.help_text }}</small>
+                {% endif %}
+                {% if form.username.errors %}
+                    <div class="error-message">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Mot de passe</label>
+                {{ form.password1 }}
+                {% if form.password1.help_text %}
+                    <small class="help-text">{{ form.password1.help_text|safe }}</small>
+                {% endif %}
+                {% if form.password1.errors %}
+                    <div class="error-message">{{ form.password1.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirmation du mot de passe</label>
+                {{ form.password2 }}
+                {% if form.password2.help_text %}
+                    <small class="help-text">{{ form.password2.help_text }}</small>
+                {% endif %}
+                {% if form.password2.errors %}
+                    <div class="error-message">{{ form.password2.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">S'inscrire</button>
+            </div>
+            
+            <div class="auth-links">
+                <p>Déjà inscrit ? <a href="{% url 'login' %}">Se connecter</a></p>
+            </div>
         </form>
     </div>
-{% endblock content%}
+</div>
 
+<style>
+    /* Ajout du style pour les messages d'aide */
+    .help-text {
+        color: #666;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
 
-  
+    .help-text ul {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }
 
-
+    .help-text li {
+        margin-bottom: 0.25rem;
+    }
+</style>
+{% endblock %}
