@@ -1,12 +1,41 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Créer un ticket{% endblock %}
+{% block title %}Créer un ticket{% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Créer le ticket</button>
-</form>
+<div class="review-container create-ticket-review">
+    <h2 class="page-title">Créer un ticket</h2>
+
+    <form method="post" enctype="multipart/form-data" class="review-form">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <h3>Livre / Article</h3>
+            
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">Titre</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description }}
+            </div>
+
+            <div class="form-group">
+                <label>Image</label>
+                <div class="file-upload">
+                    <label for="{{ form.image.id_for_label }}" class="file-upload-btn">
+                        Télécharger fichier
+                    </label>
+                    {{ form.image }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Publier</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

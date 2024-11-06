@@ -7,9 +7,10 @@ from itertools import chain
 from .forms import TicketForm, ReviewForm, UserSearchForm, UserFollowsForm
 from .models import Ticket, Review, UserFollows
 from django.contrib.auth import get_user_model
-from django.db import transaction
+from django.db import transaction, IntegrityError
 
 User = get_user_model()
+
 
 @login_required(login_url='login')
 def feed(request):
@@ -50,6 +51,7 @@ def feed(request):
     }
     return render(request, 'func/feed.html', context)
 
+
 @login_required(login_url='login')
 def create_standalone_review(request):
     if request.method == 'POST':
@@ -63,6 +65,7 @@ def create_standalone_review(request):
         form = ReviewForm()
     return render(request, 'func/create_standalone_review.html', {'form': form})
 
+
 @login_required(login_url='login')
 def ticket_create(request):
     if request.method == 'POST':
@@ -75,6 +78,7 @@ def ticket_create(request):
     else:
         form = TicketForm()
     return render(request, 'func/ticket_create.html', {'form': form})
+
 
 @login_required(login_url='login')
 def ticket_edit(request, ticket_id):
@@ -90,6 +94,7 @@ def ticket_edit(request, ticket_id):
         form = TicketForm(instance=ticket)
     return render(request, 'func/ticket_edit.html', {'form': form})
 
+
 @login_required(login_url='login')
 def ticket_delete(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
@@ -100,10 +105,16 @@ def ticket_delete(request, ticket_id):
         return redirect('feed')
     return render(request, 'func/ticket_delete.html', {'ticket': ticket})
 
+
+
+
 @login_required(login_url='login')
 def create_review(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
-    if not ticket.can_be_reviewed_by(request.user):
+    
+    # Vérifier si l'utilisateur a déjà créé une critique pour ce ticket
+    if Review.objects.filter(ticket=ticket, user=request.user).exists():
+        messages.error(request, "Vous avez déjà créé une critique pour ce ticket.")
         return redirect('feed')
     
     if request.method == 'POST':
@@ -112,11 +123,19 @@ def create_review(request, ticket_id):
             review = form.save(commit=False)
             review.ticket = ticket
             review.user = request.user
-            review.save()
-            return redirect('feed')
+            try:
+                review.save()
+                messages.success(request, "Votre critique a été créée avec succès.")
+                return redirect('feed')
+            except IntegrityError:
+                messages.error(request, "Vous avez déjà créé une critique pour ce ticket.")
+                return redirect('feed')
     else:
         form = ReviewForm()
     return render(request, 'func/create_review.html', {'form': form, 'ticket': ticket})
+
+
+
 
 @login_required(login_url='login')
 def create_ticket_review(request):
@@ -199,6 +218,8 @@ def posts(request):
     
     return render(request, 'func/posts.html', {'posts': posts})
 
+
+
 @login_required(login_url='login')
 def subscriptions(request):
     form = UserSearchForm(request.POST or None)
@@ -210,6 +231,9 @@ def subscriptions(request):
             Q(username__icontains=search_query) & 
             ~Q(id=request.user.id)
         )
+        
+        if not search_results:
+            messages.error(request, f"Aucun utilisateur trouvé avec le nom '{search_query}'")
     
     following = UserFollows.objects.filter(user=request.user)
     followers = UserFollows.objects.filter(followed_user=request.user)
@@ -223,6 +247,9 @@ def subscriptions(request):
     
     return render(request, 'func/subscriptions.html', context)
 
+
+
+
 @login_required(login_url='login')
 def follow_user(request, user_id):
     user_to_follow = get_object_or_404(User, id=user_id)
@@ -235,6 +262,9 @@ def follow_user(request, user_id):
         messages.success(request, f'Vous suivez maintenant {user_to_follow.username}')
     
     return redirect('subscriptions')
+
+
+
 
 @login_required(login_url='login')
 def unfollow_user(request, user_id):

@@ -4,6 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
+
 class Ticket(models.Model):
     title = models.CharField(max_length=128, verbose_name='Title')
     description = models.TextField(max_length=2048, blank=True)
@@ -24,11 +25,15 @@ class Ticket(models.Model):
         return f"{self.title} - by {self.user.username}"
 
     def can_be_reviewed_by(self, user):
+        """Vérifie si un utilisateur peut créer une critique pour ce ticket"""
         if not user or user.is_anonymous:
             return False
         if user == self.user:
             return False
+        # Vérifie si l'utilisateur a déjà créé une critique pour ce ticket
         return not Review.objects.filter(ticket=self, user=user).exists()
+
+
 
 class Review(models.Model):
     ticket = models.ForeignKey(
@@ -52,7 +57,7 @@ class Review(models.Model):
 
     class Meta:
         ordering = ['-time_created']
-        unique_together = ['ticket', 'user']
+        unique_together = ['ticket', 'user']  # Empêche les critiques multiples
         verbose_name = 'Review'
         verbose_name_plural = 'Reviews'
 
@@ -70,6 +75,8 @@ class Review(models.Model):
     @property
     def rating_as_stars(self):
         return '★' * self.rating + '☆' * (5 - self.rating)
+
+
 
 class UserFollows(models.Model):
     user = models.ForeignKey(

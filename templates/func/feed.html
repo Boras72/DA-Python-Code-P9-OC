@@ -5,9 +5,8 @@
 {% block content %}
 <div class="review-container">
     <div class="action-buttons">
-        <a href="{% url 'ticket_create' %}" class="action-button">Créer un Ticket</a>
-        <a href="{% url 'create_standalone_review' %}" class="action-button">Créer une critique</a>
-        <a href="{% url 'create_ticket_review' %}" class="action-button">Créer une critique en réponse à un ticket</a>
+        <a href="{% url 'ticket_create' %}" class="action-button">Demander une critique</a>
+        <a href="{% url 'create_ticket_review' %}" class="action-button">Créer une critique</a>
     </div>
 
     <div class="feed-posts">
@@ -37,6 +36,11 @@
                             {% if post.image %}
                                 <div class="image-section">
                                     <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
+                                </div>
+                            {% endif %}
+                            {% if post.can_review %}
+                                <div class="ticket-actions">
+                                    <a href="{% url 'create_review' post.id %}" class="review-button">Créer une critique</a>
                                 </div>
                             {% endif %}
                         </div>
@@ -96,6 +100,41 @@
         margin-bottom: 2rem;
     }
 
+    .action-button {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .action-button:hover {
+        background-color: #0056b3;
+    }
+
+    .ticket-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+
+    .review-button {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .review-button:hover {
+        background-color: #218838;
+    }
+
+    /* Le reste du style reste inchangé */
     .post-frame {
         background: white;
         border-radius: 8px;
@@ -170,7 +209,7 @@
     }
 
     .post-image, .ticket-image {
-        max-width: 300px;  /* Réduit la largeur maximale des images */
+        max-width: 300px;
         height: auto;
         border-radius: 4px;
     }
