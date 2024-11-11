@@ -40,7 +40,7 @@
                             {% endif %}
                             {% if post.can_review %}
                                 <div class="ticket-actions">
-                                    <a href="{% url 'create_review' post.id %}" class="review-button">Créer une critique</a>
+                                    <a href="{% url 'create_review' ticket_id=post.id %}" class="review-button">Créer une critique</a>
                                 </div>
                             {% endif %}
                         </div>
@@ -134,7 +134,6 @@
         background-color: #218838;
     }
 
-    /* Le reste du style reste inchangé */
     .post-frame {
         background: white;
         border-radius: 8px;

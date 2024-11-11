@@ -98,6 +98,7 @@ def ticket_delete(request, ticket_id):
 def create_review(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     
+    # Vérifier si l'utilisateur a déjà créé une critique pour ce ticket
     if Review.objects.filter(ticket=ticket, user=request.user).exists():
         messages.error(request, "Vous avez déjà créé une critique pour ce ticket.")
         return redirect('feed')
@@ -113,11 +114,15 @@ def create_review(request, ticket_id):
                 messages.success(request, "Votre critique a été créée avec succès.")
                 return redirect('feed')
             except IntegrityError:
-                messages.error(request, "Vous avez déjà créé une critique pour ce ticket.")
-                return redirect('feed')
+                messages.error(request, "Une erreur est survenue lors de la création de la critique.")
     else:
         form = ReviewForm()
-    return render(request, 'func/create_review.html', {'form': form, 'ticket': ticket})
+    
+    context = {
+        'form': form,
+        'ticket': ticket
+    }
+    return render(request, 'func/create_review.html', context)
 
 @login_required(login_url='login')
 def edit_review(request, review_id):

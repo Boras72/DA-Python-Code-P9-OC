@@ -57,10 +57,18 @@ class Review(models.Model):
         verbose_name_plural = 'Critiques'
 
     def clean(self):
-        if self.rating < 0 or self.rating > 5:
+        if self.rating is not None and (self.rating < 0 or self.rating > 5):
             raise ValidationError('La note doit être comprise entre 0 et 5')
-        if Review.objects.filter(ticket=self.ticket, user=self.user).exists():
-            raise ValidationError('Vous avez déjà créé une critique pour ce ticket')
+        
+        # Vérification de l'existence d'une critique uniquement si le ticket est défini
+        if self.ticket_id is not None and self.user_id is not None:
+            existing_review = Review.objects.filter(
+                ticket=self.ticket, 
+                user=self.user
+            ).exclude(pk=self.pk).exists()
+            
+            if existing_review:
+                raise ValidationError('Vous avez déjà créé une critique pour ce ticket')
 
     def __str__(self):
         return f"Critique de {self.ticket.title} par {self.user.username}"

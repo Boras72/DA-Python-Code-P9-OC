@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
 class LoginForm(forms.Form):
     username = forms.CharField(
         max_length=63,
@@ -22,10 +21,6 @@ class LoginForm(forms.Form):
         }),
         label="Mot de passe"
     )
-
-
-
-
 
 class SignupForm(UserCreationForm):
     class Meta:
