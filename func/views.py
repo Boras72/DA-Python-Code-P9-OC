@@ -15,14 +15,24 @@ User = get_user_model()
 def feed(request):
     followed_users = UserFollows.objects.filter(user=request.user).values_list('followed_user', flat=True)
     
-    followed_tickets = Ticket.objects.filter(user__in=followed_users)
-    followed_reviews = Review.objects.filter(user__in=followed_users)
-    user_tickets = Ticket.objects.filter(user=request.user)
-    user_reviews = Review.objects.filter(user=request.user)
-    response_reviews = Review.objects.filter(ticket__in=user_tickets)
-
+    # Récupérer les tickets des utilisateurs suivis et de l'utilisateur connecté
+    tickets = Ticket.objects.filter(
+        Q(user__in=followed_users) | Q(user=request.user)
+    )
+    
+    # Récupérer les critiques:
+    # 1. Des utilisateurs suivis
+    # 2. De l'utilisateur connecté
+    # 3. Sur les tickets de l'utilisateur connecté (sauf si déjà incluses dans 2)
+    reviews = Review.objects.filter(
+        Q(user__in=followed_users) |  # Critiques des utilisateurs suivis
+        Q(user=request.user) |        # Critiques de l'utilisateur connecté
+        Q(ticket__user=request.user)  # Critiques sur les tickets de l'utilisateur
+    ).distinct()                      # Éliminer les doublons
+    
+    # Combiner et trier tous les posts
     all_posts = sorted(
-        chain(followed_tickets, followed_reviews, user_tickets, user_reviews, response_reviews),
+        chain(tickets, reviews),
         key=lambda x: x.time_created,
         reverse=True
     )

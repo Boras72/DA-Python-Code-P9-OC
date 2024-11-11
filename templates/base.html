@@ -9,15 +9,22 @@
 </head>
 <body>
     <header>
-        <h1 class="site-title">LITReview</h1>
-        {% if user.is_authenticated %}
-        <nav class="main-nav">
-            <a href="{% url 'feed' %}" class="nav-link">Flux</a>
-            <a href="{% url 'posts' %}" class="nav-link">Posts</a>
-            <a href="{% url 'subscriptions' %}" class="nav-link">Abonnements</a>
-            <a href="{% url 'logout' %}" class="nav-link">Se déconnecter</a>
-        </nav>
-        {% endif %}
+        <div class="site-header">
+            <div class="left-section">
+                <h1 class="site-title">LITReview</h1>
+            </div>
+            <div class="center-section">
+                <img src="{% static 'img/logo.png' %}" alt="LITReview Logo" class="site-logo">
+            </div>
+            {% if user.is_authenticated %}
+            <nav class="main-nav">
+                <a href="{% url 'feed' %}" class="nav-link">Flux</a>
+                <a href="{% url 'posts' %}" class="nav-link">Posts</a>
+                <a href="{% url 'subscriptions' %}" class="nav-link">Abonnements</a>
+                <a href="{% url 'logout' %}" class="nav-link">Se déconnecter</a>
+            </nav>
+            {% endif %}
+        </div>
     </header>
 
     <main class="container">
@@ -33,5 +40,32 @@
         
         {% block content %}{% endblock %}
     </main>
+
+    <style>
+        .site-header {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .left-section {
+            justify-self: start;
+        }
+
+        .center-section {
+            justify-self: center;
+        }
+
+        .site-logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .main-nav {
+            justify-self: end;
+        }
+    </style>
 </body>
 </html>

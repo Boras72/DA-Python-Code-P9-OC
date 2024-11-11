@@ -11,8 +11,10 @@
             {% csrf_token %}
             
             {% if messages %}
-                {% for message in messages|slice:":1" %}
-                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% for message in messages %}
+                    {% if 'Au revoir' not in message.message %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             
@@ -69,7 +71,7 @@
         color: #555;
         font-weight: 500;
     }
-    
+
     .form-group input {
         padding: 0.75rem;
         border: 1px solid #ddd;
@@ -134,5 +136,3 @@
     }
 </style>
 {% endblock %}
-
-
