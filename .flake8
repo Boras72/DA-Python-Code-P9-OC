@@ -1,0 +1,21 @@
+[flake8]
+max-line-length = 119
+ignore = E203, E266, E501, W503, F403, F401
+extend-ignore = E402, E231, W504
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    env,
+    migrations,
+    settings.py,
+    manage.py,
+    .vscode,
+    .idea,
+    .pytest_cache,
+    .venv,
+    static,
+    media,
+    templates,
+    .html

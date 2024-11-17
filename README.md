@@ -32,7 +32,7 @@ BooksReview est une application web Django permettant aux utilisateurs de créer
     pip install -r requirements.txt
     ```
 
-    4. Créer et appliquer les fichiers de migration basés sur les modèles de l'application afin d'initialiser de la base de données
+    4. Créez et appliquer les fichiers de migration basés sur les modèles de l'application afin d'initialiser de la base de données
     ```
     python manage.py migrate
     python manage.py makemigrations
@@ -91,11 +91,11 @@ python manage.py test
 ## Contribuer
 
 Les contributions sont les bienvenues ! Pour contribuer :
-    1. Forkez le projet.
-    2. Créez une branche pour votre fonctionnalité (git checkout -b feature/ma-fonctionnalite).
-    3. Commitez vos modifications (git commit -am 'Ajoute une nouvelle fonctionnalité').
-    4. Poussez votre branche (git push origin feature/ma-fonctionnalite).
-    5. Ouvrez une Pull Request.
+1. Forkez le projet.
+2. Créez une branche pour votre fonctionnalité (git checkout -b feature/ma-fonctionnalite).
+3. Commitez vos modifications (git commit -am 'Ajoute une nouvelle fonctionnalité').
+4. Poussez votre branche (git push origin feature/ma-fonctionnalite).
+5. Ouvrez une Pull Request.
 
 
 ## Licence
@@ -105,7 +105,10 @@ Ce projet est sous licence Opensource. Veuillez consulter le fichier LICENSE pou
 
 ## Auteurs
 
-    • Boras72 : https://github.com/Boras72
+    Boras72 :
+    ```
+    https://github.com/Boras72
+    ```
 
 
 

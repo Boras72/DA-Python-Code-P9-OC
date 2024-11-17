@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "BooksReview"
+version = "0.1.0"
+description = "A project for reviewing books"
+authors = [
+    {name = "Boras72", email = "borasomiko@gmail.com"}
+]
+license = {text = "MIT"}
+dependencies = [
+    "flask",
+    "sqlalchemy",
+    "requests"
+]
+
+[tool.black]
+line-length = 119
+target-version = ["py312"]  # Adaptez à la version Python
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | env
+  | build
+  | dist
+  | migrations
+  | __pycache__
+  | static
+  | media
+  | templates
+  | .vscode
+  | .idea
+  | .pytest_cache
+  | .html
+)
+'''

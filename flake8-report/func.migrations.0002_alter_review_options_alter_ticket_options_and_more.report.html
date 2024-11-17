@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: func\migrations\0002_alter_review_options_alter_ticket_options_and_more.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="func.migrations.0002_alter_review_options_alter_ticket_options_and_more.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               func\migrations\0002_alter_review_options_alter_ticket_options_and_more.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  7
+               </span>
+               <strong>E501:</strong> line too long (112 > 79 characters)
+               
+                  (and 4 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Line too long (112 > 79 characters):</p>
+               
+               <a href="func.migrations.0002_alter_review_options_alter_ticket_options_and_more.source.html#l19">
+                  <tt><i>19</i>             <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ordering&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;-time_created&#39;</span><span class="p">],</span> <span class="s1">&#39;verbose_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Review&#39;</span><span class="p">,</span> <span class="s1">&#39;verbose_name_plural&#39;</span><span class="p">:</span> <span class="s1">&#39;Reviews&#39;</span><span class="p">},</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (112 > 79 characters):</p>
+               
+               <a href="func.migrations.0002_alter_review_options_alter_ticket_options_and_more.source.html#l23">
+                  <tt><i>23</i>             <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ordering&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;-time_created&#39;</span><span class="p">],</span> <span class="s1">&#39;verbose_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Ticket&#39;</span><span class="p">,</span> <span class="s1">&#39;verbose_name_plural&#39;</span><span class="p">:</span> <span class="s1">&#39;Tickets&#39;</span><span class="p">},</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (120 > 79 characters):</p>
+               
+               <a href="func.migrations.0002_alter_review_options_alter_ticket_options_and_more.source.html#l27">
+                  <tt><i>27</i>             <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ordering&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;-created_at&#39;</span><span class="p">],</span> <span class="s1">&#39;verbose_name&#39;</span><span class="p">:</span> <span class="s1">&#39;User follow&#39;</span><span class="p">,</span> <span class="s1">&#39;verbose_name_plural&#39;</span><span class="p">:</span> <span class="s1">&#39;User follows&#39;</span><span class="p">},</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (123 > 79 characters):</p>
+               
+               <a href="func.migrations.0002_alter_review_options_alter_ticket_options_and_more.source.html#l37">
+                  <tt><i>37</i>             <span class="n">field</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">on_delete</span><span class="o">=</span><span class="n">django</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">deletion</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;reviews&#39;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s1">&#39;func.ticket&#39;</span><span class="p">),</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (134 > 79 characters):</p>
+               
+               <a href="func.migrations.0002_alter_review_options_alter_ticket_options_and_more.source.html#l42">
+                  <tt><i>42</i>             <span class="n">field</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">on_delete</span><span class="o">=</span><span class="n">django</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">deletion</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;reviews&#39;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">),</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (81 > 79 characters):</p>
+               
+               <a href="func.migrations.0002_alter_review_options_alter_ticket_options_and_more.source.html#l47">
+                  <tt><i>47</i>             <span class="n">field</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">upload_to</span><span class="o">=</span><span class="s1">&#39;tickets/&#39;</span><span class="p">),</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (134 > 79 characters):</p>
+               
+               <a href="func.migrations.0002_alter_review_options_alter_ticket_options_and_more.source.html#l52">
+                  <tt><i>52</i>             <span class="n">field</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">on_delete</span><span class="o">=</span><span class="n">django</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">deletion</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;tickets&#39;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">),</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>
