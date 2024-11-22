@@ -149,16 +149,6 @@ header {
   text-align: center;
 }
 
-.message.success {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-.message.error {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
 /* Post styles */
 .post-header {
   margin-bottom: 1rem;
@@ -204,7 +194,7 @@ header {
 
 /* Form sections */
 .form-section {
-  background-color: #E2B6B6;
+  background-color: #b16060;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -221,4 +211,51 @@ header {
 .form-actions {
   text-align: center;
   margin-top: 2rem;
+}
+
+
+
+/* WCAG 2.1 Level AA compliant*/
+
+/* color contrast */
+.message.error {
+  background-color: #FFFFFF;   /* Ratio de contraste minimum 4.5:1 */
+  color:  #C41E3A;  /* Rouge accessible */
+}
+
+.message.success {
+  color: #2E7D32;  /* Instead of #008000 */
+  background-color: #FFFFFF;
+}
+
+/* Text colors - Dark on light backgrounds */
+.text-dark {
+  color: #333333;  /* Instead of #888, #666666 */
+  background-color: #FFFFFF;
+}
+
+/* Links */
+a {
+  color: #0056B3;  /* Instead of #0000FF, #0044DD */
+}
+a:hover {
+  color: #003977;
+}
+
+/* Warning messages */
+.warning-message {
+  color: #856404;  /* Instead of #9C6500 */
+  background-color: #FFF3CD;
+}
+
+/* Code highlights */
+.code-highlight {
+  color: #871F78;  /* Instead of #800080 */
+  background-color: #FFFFFF;
+}
+
+/* Muted text */
+.text-muted {
+  color: #595959;  /* Instead of #717171 */
+  background-color: #FFFFFF;
 }

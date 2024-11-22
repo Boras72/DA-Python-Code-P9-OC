@@ -1,3 +1,46 @@
+"""
+Ce module définit les vues principales de l'application fonctionnelle.
+
+Dépendances:
+- django.shortcuts
+- django.contrib.auth.decorators 
+- django.core.paginator
+- django.db.models
+- itertools
+- .models
+- .forms
+
+Fonctions principales:
+- feed: Affichage du flux d'activité
+- posts: Gestion des posts utilisateur
+- ticket_create/edit/delete: CRUD des tickets
+- create_review/edit_review/delete_review: CRUD des critiques
+- create_ticket_review: Création simultanée ticket + critique
+- subscriptions/follow/unfollow: Gestion des abonnements
+
+Routes principales:
+
+Flux et Posts:
+    - /feed/: Flux d'activité
+    - /posts/: Liste des posts de l'utilisateur
+
+Tickets:
+    - /ticket/create/: Créer un ticket
+    - /ticket/edit/<id>/: Modifier un ticket
+    - /ticket/delete/<id>/: Supprimer un ticket
+
+    Critiques:
+    - /review/create/<id>/: Créer une critique
+    - /review/edit/<id>/: Modifier une critique 
+    - /review/delete/<id>/: Supprimer une critique
+    - /ticket-review/create/: Créer un ticket et sa critique
+
+Abonnements:
+    - /subscriptions/: Gestion des abonnements
+    - /follow/<id>/: Suivre un utilisateur
+    - /unfollow/<id>/: Ne plus suivre
+"""
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -14,6 +57,26 @@ User = get_user_model()
 
 @login_required(login_url="login")
 def feed(request):
+    """
+    Affiche le flux d'activité de l'utilisateur.
+    
+    Affiche:
+    - Les tickets des utilisateurs suivis
+    - Les critiques des utilisateurs suivis
+    - Les tickets de l'utilisateur connecté
+    - Les critiques sur les tickets de l'utilisateur
+    
+    Args:
+        request (HttpRequest): La requête HTTP
+
+    Returns:
+        HttpResponse: Page du flux d'activité paginée
+
+    Example:
+        @login_required(login_url="login")
+        def feed(request):
+            # Récupération et affichage du flux
+    """
     followed_users = UserFollows.objects.filter(user=request.user).values_list("followed_user", flat=True)
 
     # Récupérer les tickets des utilisateurs suivis et de l'utilisateur connecté
@@ -58,6 +121,21 @@ def feed(request):
 
 @login_required(login_url="login")
 def ticket_create(request):
+    """
+    Crée un nouveau ticket.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+
+    Returns:
+        HttpResponse: Redirection vers le flux en cas de succès
+                     ou formulaire avec erreurs
+
+    Example:
+        @login_required(login_url="login")
+        def ticket_create(request):
+            # Création d'un ticket
+    """
     if request.method == "POST":
         form = TicketForm(request.POST, request.FILES)
         if form.is_valid():
@@ -73,6 +151,22 @@ def ticket_create(request):
 
 @login_required(login_url="login")
 def ticket_edit(request, ticket_id):
+    """
+    Modifie un ticket existant.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+        ticket_id (int): ID du ticket à modifier
+
+    Returns:
+        HttpResponse: Redirection vers le flux en cas de succès
+                     ou formulaire avec erreurs
+
+    Example:
+        @login_required(login_url="login")
+        def ticket_edit(request, ticket_id):
+            # Modification du ticket
+    """
     ticket = get_object_or_404(Ticket, id=ticket_id)
     if request.user != ticket.user:
         messages.error(request, "Vous n'avez pas la permission de modifier ce ticket.")
@@ -91,6 +185,21 @@ def ticket_edit(request, ticket_id):
 
 @login_required(login_url="login")
 def ticket_delete(request, ticket_id):
+    """
+    Supprime un ticket existant.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+        ticket_id (int): ID du ticket à supprimer
+
+    Returns:
+        HttpResponse: Redirection vers le flux
+
+    Example:
+        @login_required(login_url="login")
+        def ticket_delete(request, ticket_id):
+            # Suppression du ticket
+    """
     ticket = get_object_or_404(Ticket, id=ticket_id)
     if request.user != ticket.user:
         messages.error(request, "Vous n'avez pas la permission de supprimer ce ticket.")
@@ -105,6 +214,22 @@ def ticket_delete(request, ticket_id):
 
 @login_required(login_url="login")
 def create_review(request, ticket_id):
+    """
+    Crée une nouvelle critique pour un ticket existant.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+        ticket_id (int): ID du ticket concerné
+
+    Returns:
+        HttpResponse: Redirection vers le flux en cas de succès
+                     ou formulaire avec erreurs
+
+    Example:
+        @login_required(login_url="login")
+        def create_review(request, ticket_id):
+            # Création d'une critique
+    """
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
     # Vérifier si l'utilisateur a déjà créé une critique pour ce ticket
@@ -136,6 +261,22 @@ def create_review(request, ticket_id):
 
 @login_required(login_url="login")
 def edit_review(request, review_id):
+    """
+    Modifie une critique existante.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+        review_id (int): ID de la critique à modifier
+
+    Returns:
+        HttpResponse: Redirection vers le flux en cas de succès
+                     ou formulaire avec erreurs
+
+    Example:
+        @login_required(login_url="login")
+        def edit_review(request, review_id):
+            # Modification de la critique
+    """
     review = get_object_or_404(Review, id=review_id)
     if request.user != review.user:
         messages.error(request, "Vous n'avez pas la permission de modifier cette critique.")
@@ -154,6 +295,21 @@ def edit_review(request, review_id):
 
 @login_required(login_url="login")
 def delete_review(request, review_id):
+    """
+    Supprime une critique existante.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+        review_id (int): ID de la critique à supprimer
+
+    Returns:
+        HttpResponse: Redirection vers le flux
+
+    Example:
+        @login_required(login_url="login")
+        def delete_review(request, review_id):
+            # Suppression de la critique
+    """
     review = get_object_or_404(Review, id=review_id)
     if request.user != review.user:
         messages.error(request, "Vous n'avez pas la permission de supprimer cette critique.")
@@ -168,6 +324,21 @@ def delete_review(request, review_id):
 
 @login_required(login_url="login")
 def create_ticket_review(request):
+    """
+    Crée simultanément un ticket et sa critique.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+
+    Returns:
+        HttpResponse: Redirection vers le flux en cas de succès
+                     ou formulaire avec erreurs
+
+    Example:
+        @login_required(login_url="login")
+        def create_ticket_review(request):
+            # Création ticket + critique
+    """
     ticket_form = TicketForm()
     review_form = ReviewForm()
 
@@ -201,6 +372,20 @@ def create_ticket_review(request):
 
 @login_required(login_url="login")
 def posts(request):
+    """
+    Affiche les posts (tickets et critiques) de l'utilisateur connecté.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+
+    Returns:
+        HttpResponse: Page listant les posts de l'utilisateur
+
+    Example:
+        @login_required(login_url="login")
+        def posts(request):
+            # Récupération des posts utilisateur
+    """
     user_tickets = Ticket.objects.filter(user=request.user)
     user_reviews = Review.objects.filter(user=request.user)
 
@@ -227,6 +412,25 @@ def posts(request):
 
 @login_required(login_url="login")
 def subscriptions(request):
+    """
+    Gère les abonnements de l'utilisateur.
+
+    Affiche:
+    - Liste des utilisateurs suivis
+    - Liste des utilisateurs qui nous suivent
+    - Formulaire de recherche d'utilisateurs
+
+    Args:
+        request (HttpRequest): La requête HTTP
+
+    Returns:
+        HttpResponse: Page de gestion des abonnements
+
+    Example:
+        @login_required(login_url="login")
+        def subscriptions(request):
+            # Gestion des abonnements
+    """
     form = UserSearchForm(request.POST or None)
     search_results = []
 
@@ -252,6 +456,21 @@ def subscriptions(request):
 
 @login_required(login_url="login")
 def follow_user(request, user_id):
+    """
+    Suit un utilisateur.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+        user_id (int): ID de l'utilisateur à suivre
+
+    Returns:
+        HttpResponse: Redirection vers la page des abonnements
+
+    Example:
+        @login_required(login_url="login")
+        def follow_user(request, user_id):
+            # Suivre un utilisateur
+    """
     user_to_follow = get_object_or_404(User, id=user_id)
 
     if user_to_follow == request.user:
@@ -269,6 +488,21 @@ def follow_user(request, user_id):
 
 @login_required(login_url="login")
 def unfollow_user(request, user_id):
+    """
+    Ne plus suivre un utilisateur.
+
+    Args:
+        request (HttpRequest): La requête HTTP
+        user_id (int): ID de l'utilisateur à ne plus suivre
+
+    Returns:
+        HttpResponse: Redirection vers la page des abonnements
+
+    Example:
+        @login_required(login_url="login")
+        def unfollow_user(request, user_id):
+            # Ne plus suivre un utilisateur
+    """
     user_to_unfollow = get_object_or_404(User, id=user_id)
 
     follow = UserFollows.objects.filter(user=request.user, followed_user=user_to_unfollow).first()

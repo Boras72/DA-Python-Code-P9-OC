@@ -1,18 +1,29 @@
 """
-URL configuration for BooksReview project.
+Ce module définit les URLs principales du projet Django.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+Dépendances:
+- django.contrib.admin
+- django.urls
+- django.shortcuts
+- django.conf
+- django.conf.urls.static
+
+Fonctions principales:
+- root_redirect: Redirige vers feed ou login selon l'authentification
+
+Routes principales:
+Authentication:
+    - /auth/: URLs de l'application d'authentification
+    - /auth/login/: Connexion
+    - /auth/signup/: Inscription
+    - /auth/logout/: Déconnexion
+
+Administration:
+    - /admin/: Interface d'administration Django
+
+Application principale:
+    - /: Redirection racine
+    - /*: URLs de l'application principale
 """
 
 # Le fichier "urls.py" définit les chemins URL pour les différentes vues de l'application
@@ -28,6 +39,19 @@ from django.conf.urls.static import static
 
 
 def root_redirect(request):
+    """
+    Redirige l'utilisateur selon son état d'authentification.
+
+    Args:
+        request (HttpRequest): La requête HTTP.
+
+    Returns:
+        HttpResponseRedirect: Redirection vers 'feed' si authentifié,
+                            sinon vers 'login'.
+
+    Exemple d'utilisation:
+        path('', root_redirect, name='root')
+    """
     if request.user.is_authenticated:
         return redirect("feed")
     return redirect("login")
