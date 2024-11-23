@@ -19,31 +19,39 @@ BooksReview est une application web Django permettant aux utilisateurs de créer
     cd BooksReview
     ```
 
-    2.  Créez et activez un environnement virtuel :
+    2. Créez et activez un environnement virtuel :
 
     ```
     python -m venv env
     source env/bin/activate            # Sur Windows, utilisez `env\Scripts\activate`
     ```
 
-    3.  Installez les dépendances :
+    3. Créer un projet Django en installant Django par pip dans l'environnement virtuel :
+
+    ```
+    pip install django
+    django-admin startproject BooksReview
+    cd BooksReview
+    ```
+
+    4.  Installez les dépendances :
 
     ```
     pip install -r requirements.txt
     ```
 
-    4. Créez et appliquer les fichiers de migration basés sur les modèles de l'application afin d'initialiser de la base de données
+    5. Après avoir créé les models, créez et appliquer les fichiers de migration basés sur les modèles de l'application afin d'initialiser de la base de données
     ```
     python manage.py migrate
     python manage.py makemigrations
     ```
 
-    5.  Créez un superutilisateur pour accéder à l'interface d'administration :
+    6.  Créez un superutilisateur pour accéder à l'interface d'administration :
 
     ```
     python manage.py createsuperuser
     ```
-
+    
 
 ## Utilisation
 
